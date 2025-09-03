@@ -13,7 +13,9 @@ from models import (
     FileUploadResponse, AIAnalysisResponse, ChartDataRequest, 
     ChartDataResponse, ErrorResponse, ChartSuggestion, ChartType, ChartParameters
 )
-from services import FileProcessingService, AIAnalysisService, ChartDataService
+from services.file_processing import FileProcessingService, file_storage
+from services.ai_analysis import AIAnalysisService
+from services.chart_data import ChartDataService
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -125,7 +127,6 @@ async def analyze_file_with_ai(file_id: str):
     """
     try:
         # Check if file exists
-        from services import file_storage
         if file_id not in file_storage:
             raise HTTPException(status_code=404, detail="File not found")
         
@@ -202,7 +203,6 @@ async def get_chart_data(request: ChartDataRequest):
 async def get_file_info(file_id: str):
     """Get information about an uploaded file"""
     try:
-        from services import file_storage
         if file_id not in file_storage:
             raise HTTPException(status_code=404, detail="File not found")
         
