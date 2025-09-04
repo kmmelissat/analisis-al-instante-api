@@ -16,10 +16,33 @@ A FastAPI-based REST API for instant data analysis and visualization with AI-pow
 
 ## Quick Start
 
+### TL;DR - Get Running in 5 Minutes
+
+```bash
+# 1. Clone and setup
+git clone <your-repo-url>
+cd analisis-al-instante-api
+python3 -m venv venv
+source venv/bin/activate
+
+# 2. Install dependencies
+pip install fastapi "uvicorn[standard]" pydantic python-multipart python-dotenv httpx pandas numpy openpyxl xlrd openai aiofiles
+
+# 3. Setup environment
+cp .env.example .env
+# Edit .env and add your OpenAI API key: OPENAI_API_KEY=sk-...
+
+# 4. Run the server
+python main.py
+
+# 5. Visit http://localhost:8000/docs to explore the API
+```
+
 ### Prerequisites
 
-- Python 3.8 or higher
+- Python 3.8 or higher (Python 3.13+ recommended)
 - pip (Python package installer)
+- OpenAI API key (get from https://platform.openai.com/api-keys)
 
 ### Installation
 
@@ -33,7 +56,7 @@ cd analisis-al-instante-api
 2. Create a virtual environment:
 
 ```bash
-python -m venv venv
+python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
@@ -42,6 +65,28 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```bash
 pip install -r requirements.txt
 ```
+
+**Note**: If you encounter issues with pandas installation on Python 3.13, install dependencies individually:
+
+```bash
+pip install fastapi "uvicorn[standard]" pydantic python-multipart python-dotenv httpx pandas numpy openpyxl xlrd openai aiofiles
+```
+
+4. Set up environment variables:
+
+Copy the example environment file and add your OpenAI API key:
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` and add your OpenAI API key:
+
+```env
+OPENAI_API_KEY=your_openai_api_key_here
+```
+
+**Important**: Get your OpenAI API key from https://platform.openai.com/api-keys
 
 ### Running the Application
 
@@ -68,8 +113,10 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
 - `GET /` - Root endpoint with API information
 - `GET /health` - Health check endpoint
-- `POST /analyze` - Submit data for analysis
-- `GET /analysis/{analysis_id}` - Retrieve analysis results
+- `POST /upload` - Upload data files (CSV, Excel, JSON)
+- `POST /analyze/{file_id}` - AI-powered analysis of uploaded file
+- `POST /chart-data` - Generate chart data for visualization
+- `GET /files/{file_id}` - Get information about uploaded file
 
 ### Example Usage
 
@@ -79,18 +126,37 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 curl http://localhost:8000/health
 ```
 
-#### Submit Analysis
+#### Upload a File
 
 ```bash
-curl -X POST "http://localhost:8000/analyze" \
-     -H "Content-Type: application/json" \
-     -d '{"data": "sample data to analyze", "analysis_type": "general"}'
+curl -X POST "http://localhost:8000/upload" \
+     -H "accept: application/json" \
+     -H "Content-Type: multipart/form-data" \
+     -F "file=@your_data_file.csv"
 ```
 
-#### Get Analysis Results
+#### Get AI Analysis
 
 ```bash
-curl http://localhost:8000/analysis/analysis_001
+curl -X POST "http://localhost:8000/analyze/{file_id}" \
+     -H "accept: application/json"
+```
+
+#### Generate Chart Data
+
+```bash
+curl -X POST "http://localhost:8000/chart-data" \
+     -H "accept: application/json" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "file_id": "your_file_id",
+       "chart_type": "scatter",
+       "parameters": {
+         "x_axis": "age",
+         "y_axis": "salary",
+         "color_by": "department"
+       }
+     }'
 ```
 
 ## Development
@@ -101,9 +167,14 @@ curl http://localhost:8000/analysis/analysis_001
 analisis-al-instante-api/
 ├── main.py              # Main FastAPI application with endpoints
 ├── models.py            # Pydantic models for request/response validation
-├── services.py          # Business logic and service layer
+├── services/            # Business logic and service layer
+│   ├── __init__.py
+│   ├── ai_analysis.py   # OpenAI integration for data analysis
+│   ├── chart_data.py    # Chart data generation service
+│   └── file_processing.py # File upload and processing service
 ├── requirements.txt     # Python dependencies
 ├── .env.example         # Environment variables template
+├── .env                 # Your environment variables (not in git)
 ├── .gitignore          # Git ignore rules
 └── README.md           # This file
 ```
@@ -112,12 +183,12 @@ analisis-al-instante-api/
 
 The API follows a clean architecture pattern:
 
-1. **`main.py`**: FastAPI application with endpoint definitions
+1. **`main.py`**: FastAPI application with endpoint definitions and environment setup
 2. **`models.py`**: Pydantic models for data validation and serialization
-3. **`services.py`**: Business logic separated into service classes:
-   - `FileProcessingService`: Handles file upload and processing
-   - `AIAnalysisService`: Manages AI-powered data analysis
-   - `ChartDataService`: Generates formatted data for visualizations
+3. **`services/`**: Business logic separated into service classes:
+   - `file_processing.py`: Handles file upload, validation, and processing
+   - `ai_analysis.py`: Manages OpenAI GPT-4 integration for data analysis
+   - `chart_data.py`: Generates formatted data for various chart types
 
 ### Supported File Types
 
@@ -154,20 +225,29 @@ pytest
 
 ### Environment Variables
 
-Create a `.env` file in the project root for environment-specific configuration:
+The `.env` file contains all necessary configuration. Key variables include:
 
 ```env
+# OpenAI API Configuration (REQUIRED)
+OPENAI_API_KEY=your_openai_api_key_here
+
 # API Configuration
 API_HOST=0.0.0.0
 API_PORT=8000
 DEBUG=True
 
-# Database (if needed)
-DATABASE_URL=sqlite:///./test.db
+# File Upload Configuration
+MAX_FILE_SIZE_MB=50
+ALLOWED_FILE_EXTENSIONS=.csv,.xlsx,.xls,.json
 
-# Security (if implementing authentication)
-SECRET_KEY=your-secret-key-here
+# Logging Configuration
+LOG_LEVEL=INFO
+
+# CORS Configuration
+ALLOWED_ORIGINS=*
 ```
+
+**Important**: The `OPENAI_API_KEY` is required for the AI analysis features to work.
 
 ### CORS Configuration
 
