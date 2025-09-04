@@ -7,6 +7,10 @@ import uvicorn
 import os
 from datetime import datetime
 import logging
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Import our custom modules
 from models import (
