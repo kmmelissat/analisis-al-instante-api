@@ -1,0 +1,47 @@
+date,region,product_category,sales_amount,units_sold,customer_segment,sales_rep,quarter
+2024-01-15,North,Electronics,15750.50,25,Enterprise,John Smith,Q1
+2024-01-20,South,Clothing,8920.75,45,Consumer,Maria Garcia,Q1
+2024-01-25,East,Electronics,22100.00,18,Enterprise,David Chen,Q1
+2024-02-01,West,Home & Garden,12450.25,32,Consumer,Sarah Johnson,Q1
+2024-02-10,North,Clothing,6780.90,38,Consumer,John Smith,Q1
+2024-02-15,South,Electronics,18900.00,22,Enterprise,Maria Garcia,Q1
+2024-02-20,East,Home & Garden,9850.75,28,Consumer,David Chen,Q1
+2024-02-28,West,Electronics,25600.50,31,Enterprise,Sarah Johnson,Q1
+2024-03-05,North,Home & Garden,11200.25,35,Consumer,John Smith,Q1
+2024-03-12,South,Clothing,7650.80,42,Consumer,Maria Garcia,Q1
+2024-03-18,East,Electronics,19750.00,24,Enterprise,David Chen,Q1
+2024-03-25,West,Clothing,8900.50,39,Consumer,Sarah Johnson,Q1
+2024-04-02,North,Electronics,21500.75,27,Enterprise,John Smith,Q2
+2024-04-08,South,Home & Garden,13200.00,33,Consumer,Maria Garcia,Q2
+2024-04-15,East,Clothing,9100.25,41,Consumer,David Chen,Q2
+2024-04-22,West,Electronics,24800.50,29,Enterprise,Sarah Johnson,Q2
+2024-05-01,North,Clothing,7850.90,37,Consumer,John Smith,Q2
+2024-05-10,South,Electronics,20300.00,26,Enterprise,Maria Garcia,Q2
+2024-05-18,East,Home & Garden,12750.75,34,Consumer,David Chen,Q2
+2024-05-25,West,Clothing,8450.25,40,Consumer,Sarah Johnson,Q2
+2024-06-03,North,Home & Garden,14200.50,36,Consumer,John Smith,Q2
+2024-06-12,South,Clothing,9750.80,43,Consumer,Maria Garcia,Q2
+2024-06-20,East,Electronics,23100.00,28,Enterprise,David Chen,Q2
+2024-06-28,West,Home & Garden,11850.75,31,Consumer,Sarah Johnson,Q2
+2024-07-05,North,Electronics,22800.25,25,Enterprise,John Smith,Q3
+2024-07-15,South,Home & Garden,13850.00,35,Consumer,Maria Garcia,Q3
+2024-07-22,East,Clothing,8750.50,38,Consumer,David Chen,Q3
+2024-07-30,West,Electronics,26200.75,32,Enterprise,Sarah Johnson,Q3
+2024-08-08,North,Clothing,9200.90,41,Consumer,John Smith,Q3
+2024-08-18,South,Electronics,21750.00,27,Enterprise,Maria Garcia,Q3
+2024-08-25,East,Home & Garden,12950.25,33,Consumer,David Chen,Q3
+2024-09-02,West,Clothing,8650.80,39,Consumer,Sarah Johnson,Q3
+2024-09-12,North,Home & Garden,15100.50,37,Consumer,John Smith,Q3
+2024-09-20,South,Clothing,9950.75,44,Consumer,Maria Garcia,Q3
+2024-09-28,East,Electronics,24500.00,30,Enterprise,David Chen,Q3
+2024-10-05,West,Home & Garden,13450.25,34,Consumer,Sarah Johnson,Q4
+2024-10-15,North,Electronics,23900.50,26,Enterprise,John Smith,Q4
+2024-10-22,South,Clothing,8850.90,40,Consumer,Maria Garcia,Q4
+2024-10-30,East,Home & Garden,14750.75,36,Consumer,David Chen,Q4
+2024-11-08,West,Electronics,25800.00,31,Enterprise,Sarah Johnson,Q4
+2024-11-18,North,Clothing,9450.25,42,Consumer,John Smith,Q4
+2024-11-25,South,Electronics,22400.50,28,Enterprise,Maria Garcia,Q4
+2024-12-05,East,Clothing,9650.80,41,Consumer,David Chen,Q4
+2024-12-15,West,Home & Garden,15950.75,38,Consumer,Sarah Johnson,Q4
+2024-12-22,North,Electronics,27200.00,33,Enterprise,John Smith,Q4
+2024-12-28,South,Home & Garden,16450.25,39,Consumer,Maria Garcia,Q4
