@@ -1,0 +1,31 @@
+customer_id,name,age,gender,city,country,subscription_type,monthly_spend,total_orders,last_order_date,customer_since,satisfaction_score,support_tickets
+CUST001,Alice Johnson,28,Female,New York,USA,Premium,89.50,12,2024-01-15,2022-03-10,4.5,2
+CUST002,Bob Smith,35,Male,London,UK,Basic,45.20,8,2024-01-14,2023-01-15,3.8,1
+CUST003,Carol Davis,42,Female,Toronto,Canada,Premium,156.75,18,2024-01-16,2021-07-22,4.8,0
+CUST004,David Wilson,31,Male,Sydney,Australia,Standard,67.30,10,2024-01-13,2022-11-05,4.2,3
+CUST005,Emma Brown,26,Female,Berlin,Germany,Premium,134.90,15,2024-01-17,2023-05-18,4.6,1
+CUST006,Frank Miller,55,Male,Paris,France,Basic,32.40,5,2024-01-12,2023-09-03,3.2,4
+CUST007,Grace Lee,33,Female,Tokyo,Japan,Standard,78.60,11,2024-01-15,2022-08-14,4.1,2
+CUST008,Henry Garcia,29,Male,Madrid,Spain,Premium,112.25,14,2024-01-16,2021-12-01,4.7,0
+CUST009,Ivy Chen,37,Female,Singapore,Singapore,Standard,85.40,9,2024-01-14,2023-02-28,3.9,2
+CUST010,Jack Taylor,44,Male,Amsterdam,Netherlands,Basic,28.70,4,2024-01-11,2023-10-12,2.8,5
+CUST011,Kate Anderson,39,Female,Stockholm,Sweden,Premium,145.80,16,2024-01-17,2022-04-07,4.9,1
+CUST012,Liam O'Connor,32,Male,Dublin,Ireland,Standard,72.15,12,2024-01-15,2023-06-20,4.0,2
+CUST013,Mia Rodriguez,27,Female,Barcelona,Spain,Premium,98.60,13,2024-01-16,2022-09-11,4.4,1
+CUST014,Noah Kim,41,Male,Seoul,South Korea,Basic,41.30,7,2024-01-13,2023-07-25,3.5,3
+CUST015,Olivia White,36,Female,Melbourne,Australia,Standard,91.20,10,2024-01-14,2022-12-18,4.3,2
+CUST016,Paul Johnson,48,Male,Vancouver,Canada,Premium,167.40,19,2024-01-17,2021-05-30,4.8,0
+CUST017,Quinn Davis,30,Non-binary,Portland,USA,Standard,63.80,8,2024-01-12,2023-03-14,3.7,3
+CUST018,Ruby Martinez,34,Female,Mexico City,Mexico,Basic,37.90,6,2024-01-11,2023-08-09,3.1,4
+CUST019,Sam Wilson,25,Male,Chicago,USA,Premium,123.50,15,2024-01-16,2022-10-25,4.5,1
+CUST020,Tina Brown,43,Female,Munich,Germany,Standard,76.30,11,2024-01-15,2023-01-07,4.1,2
+CUST021,Uma Patel,38,Female,Mumbai,India,Premium,89.70,12,2024-01-14,2022-06-13,4.2,2
+CUST022,Victor Lopez,52,Male,Buenos Aires,Argentina,Basic,33.60,5,2024-01-10,2023-11-28,2.9,5
+CUST023,Wendy Chang,31,Female,Taipei,Taiwan,Standard,82.40,9,2024-01-13,2023-04-02,3.8,3
+CUST024,Xavier Silva,29,Male,São Paulo,Brazil,Premium,108.90,14,2024-01-17,2022-07-08,4.6,1
+CUST025,Yuki Tanaka,35,Female,Osaka,Japan,Standard,69.50,10,2024-01-15,2023-05-21,4.0,2
+CUST026,Zoe Clark,26,Female,Los Angeles,USA,Premium,142.30,17,2024-01-16,2021-11-14,4.7,0
+CUST027,Adam Scott,40,Male,Edinburgh,UK,Basic,29.80,4,2024-01-09,2023-12-05,3.0,4
+CUST028,Beth Green,33,Female,Copenhagen,Denmark,Standard,87.60,12,2024-01-14,2022-08-27,4.2,2
+CUST029,Chris Evans,37,Male,Brussels,Belgium,Premium,119.40,15,2024-01-17,2022-02-19,4.5,1
+CUST030,Diana Prince,42,Female,Vienna,Austria,Standard,74.20,11,2024-01-13,2023-06-08,3.9,3
