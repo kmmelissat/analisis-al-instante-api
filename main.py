@@ -169,9 +169,15 @@ async def analyze_file_with_ai(file_id: str):
 @app.post("/chart-data", response_model=ChartDataResponse)
 async def get_chart_data(request: ChartDataRequest):
     """
-    Get formatted data for a specific chart based on parameters
+    Get formatted data for a specific chart based on parameters with AI insights
     """
     try:
+        # Check if file exists
+        if request.file_id not in file_storage:
+            raise HTTPException(status_code=404, detail="File not found")
+        
+        df = file_storage[request.file_id]
+        
         # Generate chart data
         chart_data = ChartDataService.get_chart_data(
             request.file_id, 
@@ -186,14 +192,25 @@ async def get_chart_data(request: ChartDataRequest):
         if request.parameters.y_axis:
             title += f" vs {request.parameters.y_axis}"
         
+        # Generate AI insights
+        ai_insights = await ai_service.generate_chart_insight(
+            request.file_id,
+            request.chart_type,
+            request.parameters,
+            chart_data,
+            df
+        )
+        
         response = ChartDataResponse(
             chart_type=request.chart_type,
             data=chart_data["data"],
             metadata=chart_data["metadata"],
-            title=title
+            title=title,
+            insight=ai_insights["insight"],
+            interpretation=ai_insights["interpretation"]
         )
         
-        logger.info(f"Chart data generated: {request.chart_type} for file {request.file_id}")
+        logger.info(f"Chart data with AI insights generated: {request.chart_type} for file {request.file_id}")
         return response
         
     except ValueError as e:

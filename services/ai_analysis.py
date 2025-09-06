@@ -42,7 +42,7 @@ class AIAnalysisService:
 
             # Call OpenAI API
             response = await self.client.chat.completions.create(
-                model="gpt-4-turbo-preview",
+                model="gpt-4o-mini",
                 messages=[
                     {
                         "role": "system",
@@ -69,8 +69,8 @@ class AIAnalysisService:
 
         except Exception as e:
             logger.error(f"Error in AI analysis: {str(e)}")
-            # Return fallback suggestions
-            return self._generate_fallback_suggestions(df, metadata)
+            # Return empty list when AI fails
+            return []
 
     def _prepare_data_summary(
         self, df: pd.DataFrame, metadata: Dict[str, Any]
@@ -171,53 +171,120 @@ Ensure the suggested columns exist in the dataset and the chart types are approp
             logger.error(f"Error parsing AI response: {e}")
             return []
 
-    def _generate_fallback_suggestions(
-        self, df: pd.DataFrame, metadata: Dict[str, Any]
-    ) -> List[ChartSuggestion]:
-        """Generate basic fallback suggestions when AI fails"""
-        suggestions = []
-        numeric_cols = metadata.get("numeric_columns", [])
-        categorical_cols = metadata.get("categorical_columns", [])
 
-        # Basic histogram for first numeric column
-        if numeric_cols:
-            suggestions.append(
-                ChartSuggestion(
-                    title=f"Distribution of {numeric_cols[0]}",
-                    chart_type=ChartType.HISTOGRAM,
-                    parameters=ChartParameters(x_axis=numeric_cols[0]),
-                    insight=f"Shows the distribution pattern of {numeric_cols[0]} values",
-                    priority=3,
-                )
+    async def generate_chart_insight(
+        self, 
+        file_id: str, 
+        chart_type: ChartType, 
+        parameters: ChartParameters, 
+        chart_data: Dict[str, Any],
+        df: pd.DataFrame
+    ) -> Dict[str, str]:
+        """Generate AI insights for a specific chart"""
+        try:
+            # Prepare chart context
+            chart_context = self._prepare_chart_context(
+                chart_type, parameters, chart_data, df
             )
-
-        # Bar chart for first categorical column
-        if categorical_cols:
-            suggestions.append(
-                ChartSuggestion(
-                    title=f"Count by {categorical_cols[0]}",
-                    chart_type=ChartType.BAR,
-                    parameters=ChartParameters(
-                        x_axis=categorical_cols[0], aggregation="count"
-                    ),
-                    insight=f"Shows the frequency of different {categorical_cols[0]} categories",
-                    priority=3,
-                )
+            
+            # Create AI prompt for chart interpretation
+            prompt = self._create_chart_insight_prompt(chart_context)
+            
+            # Call OpenAI API
+            response = await self.client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {
+                        "role": "system", 
+                        "content": "You are a data analyst expert. Analyze the provided chart and data to generate meaningful insights."
+                    },
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.7,
+                max_tokens=500
             )
+            
+            # Parse response
+            ai_response = response.choices[0].message.content
+            
+            return {
+                "insight": self._extract_insight(ai_response),
+                "interpretation": self._extract_interpretation(ai_response)
+            }
+            
+        except Exception as e:
+            logger.error(f"Error generating chart insight: {e}")
+            return {
+                "insight": None,
+                "interpretation": None
+            }
 
-        # Scatter plot if we have at least 2 numeric columns
-        if len(numeric_cols) >= 2:
-            suggestions.append(
-                ChartSuggestion(
-                    title=f"{numeric_cols[0]} vs {numeric_cols[1]}",
-                    chart_type=ChartType.SCATTER,
-                    parameters=ChartParameters(
-                        x_axis=numeric_cols[0], y_axis=numeric_cols[1]
-                    ),
-                    insight=f"Reveals the relationship between {numeric_cols[0]} and {numeric_cols[1]}",
-                    priority=4,
-                )
-            )
+    def _prepare_chart_context(self, chart_type, parameters, chart_data, df):
+        """Prepare context about the chart for AI analysis"""
+        context_parts = [
+            f"Chart Type: {chart_type.value}",
+            f"Data Points: {len(chart_data['data'])}",
+        ]
+        
+        if parameters.x_axis:
+            context_parts.append(f"X-axis: {parameters.x_axis}")
+        if parameters.y_axis:
+            context_parts.append(f"Y-axis: {parameters.y_axis}")
+        if parameters.aggregation:
+            context_parts.append(f"Aggregation: {parameters.aggregation}")
+        
+        # Add sample data points
+        sample_data = chart_data['data'][:5]  # First 5 data points
+        context_parts.append(f"Sample Data: {sample_data}")
+        
+        # Add statistical info from metadata
+        if 'total_points' in chart_data['metadata']:
+            context_parts.append(f"Total Points: {chart_data['metadata']['total_points']}")
+        
+        return "\n".join(context_parts)
 
-        return suggestions
+    def _create_chart_insight_prompt(self, chart_context):
+        """Create AI prompt for chart insight generation"""
+        return f"""
+Analyze this data visualization and provide insights:
+
+{chart_context}
+
+Please provide:
+1. INSIGHT: A brief, actionable insight about what this chart reveals (1-2 sentences)
+2. INTERPRETATION: A detailed explanation of the patterns, trends, or relationships shown (2-3 sentences)
+
+Focus on:
+- Key patterns or trends visible in the data
+- Notable outliers or anomalies
+- Business implications or actionable insights
+- Relationships between variables
+
+Format your response as:
+INSIGHT: [your insight here]
+INTERPRETATION: [your interpretation here]
+"""
+
+    def _extract_insight(self, ai_response):
+        """Extract insight from AI response"""
+        try:
+            lines = ai_response.split('\n')
+            for line in lines:
+                if line.startswith('INSIGHT:'):
+                    return line.replace('INSIGHT:', '').strip()
+            return None
+        except:
+            return None
+
+    def _extract_interpretation(self, ai_response):
+        """Extract interpretation from AI response"""
+        try:
+            lines = ai_response.split('\n')
+            for line in lines:
+                if line.startswith('INTERPRETATION:'):
+                    return line.replace('INTERPRETATION:', '').strip()
+            return None
+        except:
+            return None
+
 

@@ -110,6 +110,8 @@ class ChartDataResponse(BaseModel):
     data: List[Dict[str, Any]]
     metadata: Dict[str, Any]
     title: str
+    insight: Optional[str] = None
+    interpretation: Optional[str] = None
 
 class ErrorResponse(BaseModel):
     error: str
