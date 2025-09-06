@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: analisis-al-instante-api
+    env: python
+    plan: free
+    # Use Python 3.11 for better compatibility
+    runtime: python-3.11
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: OPENAI_API_KEY
+        sync: false # This should be set manually in Render dashboard
+      - key: API_HOST
+        value: 0.0.0.0
+      - key: DEBUG
+        value: false
+      - key: LOG_LEVEL
+        value: INFO
+      - key: ALLOWED_ORIGINS
+        value: "*"
+      - key: MAX_FILE_SIZE_MB
+        value: 50
+      - key: ALLOWED_FILE_EXTENSIONS
+        value: ".csv,.xlsx,.xls,.json"

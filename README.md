@@ -172,11 +172,15 @@ analisis-al-instante-api/
 │   ├── ai_analysis.py   # OpenAI integration for data analysis
 │   ├── chart_data.py    # Chart data generation service
 │   └── file_processing.py # File upload and processing service
-├── requirements.txt     # Python dependencies
-├── .env.example         # Environment variables template
-├── .env                 # Your environment variables (not in git)
-├── .gitignore          # Git ignore rules
-└── README.md           # This file
+├── requirements.txt     # Production dependencies (deployment-optimized)
+├── requirements-dev.txt # Development dependencies
+├── Dockerfile          # Docker configuration for deployment
+├── render.yaml         # Render.com deployment configuration
+├── .dockerignore       # Docker ignore rules
+├── .env.example        # Environment variables template
+├── .env                # Your environment variables (not in git)
+├── .gitignore         # Git ignore rules
+└── README.md          # This file
 ```
 
 ### Architecture Overview
@@ -265,30 +269,71 @@ app.add_middleware(
 
 ## Deployment
 
-### Using Docker (Optional)
+### Quick Deploy to Render
 
-Create a `Dockerfile`:
+1. **Fork/Clone** this repository to your GitHub account
 
-```dockerfile
-FROM python:3.11-slim
+2. **Connect to Render**:
 
-WORKDIR /app
+   - Go to [Render.com](https://render.com)
+   - Connect your GitHub account
+   - Create a new Web Service from your repository
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+3. **Configure Environment**:
 
-COPY . .
+   - Render will automatically detect the `render.yaml` configuration
+   - **Important**: Add your `OPENAI_API_KEY` in the Render dashboard environment variables
 
-EXPOSE 8000
+4. **Deploy**: Render will automatically build and deploy your API
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-```
+### Using Docker
 
-Build and run:
+The included `Dockerfile` is optimized for deployment:
 
 ```bash
+# Build the image
 docker build -t analisis-api .
-docker run -p 8000:8000 analisis-api
+
+# Run with environment variables
+docker run -p 8000:8000 \
+  -e OPENAI_API_KEY=your_api_key_here \
+  analisis-api
+```
+
+### Manual Deployment (Any Platform)
+
+For platforms like Railway, Fly.io, or others:
+
+```bash
+# Use the optimized requirements
+pip install -r requirements.txt
+
+# Set environment variables
+export OPENAI_API_KEY=your_api_key_here
+
+# Run the server
+uvicorn main:app --host 0.0.0.0 --port $PORT
+```
+
+### Deployment Troubleshooting
+
+**Build Errors with pandas/numpy**:
+
+- The updated `requirements.txt` uses flexible version ranges for better compatibility
+- Uses Python 3.11 in Docker/Render for optimal package compatibility
+- Removed problematic dependencies that can cause build failures
+
+**Common Issues**:
+
+1. **Missing OPENAI_API_KEY**: Ensure the environment variable is set in your deployment platform
+2. **Port Issues**: Use `$PORT` environment variable for platforms like Render/Railway
+3. **Build Timeouts**: The optimized requirements should build faster, but increase timeout if needed
+
+**Alternative Requirements** (if build still fails):
+
+```bash
+# Minimal installation for deployment
+pip install fastapi uvicorn python-dotenv openai pandas numpy openpyxl aiofiles
 ```
 
 ### Production Deployment
